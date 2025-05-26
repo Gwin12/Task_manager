@@ -40,6 +40,8 @@ class TaskController {
             if (error) return errorResponse(res, 400, error?.details[0]?.message)
             const task = await TaskServices.findOneTask(data)
             if (!task) return errorResponse(res, 404, "Task not found");
+            task.timeSpent = value.timeSpent ? value.timeSpent : task.timeSpent;
+            task.status = value.status ? value.status : task.status;
             await TaskServices.updateTask(task, value);
             return successResponse(res, 200, "Task updated successfully.", task);
         } catch (error) {
