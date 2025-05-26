@@ -5,7 +5,7 @@
 - Only admin can reports on task completion rate of a user
 
 # Setup
-- Run npm i
+- Run npm install
 - Add .env variables mentioned below
 - Run npm start
 - Run 'npm run dev' for for development mode
