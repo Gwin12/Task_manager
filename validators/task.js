@@ -2,7 +2,7 @@ const Joi = require('joi');
 
 const addTaskSchema = Joi.object({
     title: Joi.string().email().required().trim(),
-    description: Joi.string().required()
+    description: Joi.string().optional().allow("")
 });
 
 const updateTaskSchema = Joi.object({
