@@ -7,8 +7,7 @@
 # Setup
 - Run npm install
 - Add .env variables mentioned below
-- Run npm start
-- Run 'npm run dev' for for development mode
+- Run npm start or Run 'npm run dev' for for development mode
 - Use the documentation link below to access the API documentation
 
 
