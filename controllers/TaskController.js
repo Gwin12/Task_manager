@@ -65,7 +65,7 @@ class TaskController {
             const tasks = await TaskServices.findAllUserTasks(req.userId);
             if (!tasks) return errorResponse(res, 404, "Tasks not found");
             const totalMinutes = tasks.reduce((acc, task) => acc + (task.timeSpent || 0), 0);
-            return successResponse(res, 200, "Tasks retrieved successfully.", { totalMinutes });
+            return successResponse(res, 200, "Tasks report time retrieved successfully.", { totalMinutes });
         } catch (error) {
             next(error)
         }
@@ -81,7 +81,7 @@ class TaskController {
             const completed = tasks.filter(task => task.status === 'completed').length;
             const pending = tasks.filter(task => task.status === 'pending').length;
             const inProgress = tasks.filter(task => task.status === 'in-progress').length;
-            return successResponse(res, 200, "Tasks retrieved successfully.", {
+            return successResponse(res, 200, "Tasks report retrieved successfully.", {
                 total, completed, pending, inProgress,
                 completionRate: total ? `${((completed / total) * 100).toFixed(2)}%` : '0%',
             })
