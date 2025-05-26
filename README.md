@@ -4,6 +4,13 @@
 - Users can get time spent using the tasks
 - Only admin can reports on task completion rate of a user
 
+# Setup
+- Run npm i
+- Add .env variables mentioned below
+- Run npm start
+- Run 'npm run dev' for for development mode
+- Use the documentation link below to access the API documentation
+
 
 # .env
 JWT_SECRET=OurSeCreT_Secret40902
