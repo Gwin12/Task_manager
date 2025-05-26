@@ -16,6 +16,12 @@ app.use((err, req, res, next) => {
   res.status(500).send("An error has occurred!");
 });
 
+app.use("/api/user", usersRoutes);
+app.use("/api/task", taskRoutes);
+
+
+app.use(errorHandler);
+
 const startServer = async () => {
   await connectDB();
   await sequelize.sync(); 
@@ -23,12 +29,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-
-app.use("/api/user", usersRoutes);
-app.use("/api/task", taskRoutes);
-
-
-app.use(errorHandler);
-
-app.listen(PORT, () => console.log(`Server running on ${PORT}`))

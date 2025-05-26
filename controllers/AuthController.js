@@ -47,7 +47,7 @@ class AuthController {
         try {
             const { value, error } = loginUserSchema.validate(req.body);
             if (error) return errorResponse(res, 400, error?.details[0]?.message);
-            const user = await UserServices.findUserData({ email: value?.email.toLowerCase().trim() });
+            const user = await UserServices.findUserData({ email: value?.email.toLowerCase().trim() }, true);
             if (!user) return errorResponse(res, 404, "Invalid credentials", null);
             const isValid = await verifyHash(value.password, user.password)
             if (!user || !isValid) {
@@ -59,29 +59,16 @@ class AuthController {
                 );
             }
 
-            const { emailVerified, status, id } = user
-            if (status === "deactivated") return errorResponse(res, 401, 'Your account has been deactivated. Contact customer care for assistance.');
-
-            if (!emailVerified) {
-                await errorResponse(res, 401,
-                    `Email not verified, please verify your email to proceed.`,
-                    { emailVerified: false }
-                );
-                return;
-            };
-
             const userData = {
-                id: id,
+                id: user.id,
                 email: user.email,
                 status: "activated",
                 role: user.role
             }
-
             const token = await signJWTToken(userData, JWT_SECRET, "7d");
-            delete user.password
-            await successResponse(res, 200, "Login successful", { user, token });
+            delete user?.dataValues?.password
+            return successResponse(res, 200, "Login successful", { user, token });
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -90,8 +77,7 @@ class AuthController {
         try {
             let { value, error } = registerSchema.validate(req.body);
             if (error) return errorResponse(res, 400, error?.details[0]?.message);
-
-            const userByEmail = await UserServices.findUserByData({ email: value?.email.toLowerCase().trim() })
+            const userByEmail = await UserServices.findUserData({ email: value?.email.toLowerCase().trim() })
             if (userByEmail) return errorResponse(res, 400, 'Email is already taken.');
             const userByUsername = await UserServices.findUserData({ username: value?.username })
             if (userByUsername) return errorResponse(res, 400, 'Username is already been used.');
@@ -101,6 +87,8 @@ class AuthController {
             value.password = hashedPassword
 
             const user = await UserServices.createUser(value);
+            delete user?.dataValues?.password
+            
             const userData = {
                 id: user.id,
                 email: user.email,
@@ -110,9 +98,7 @@ class AuthController {
 
             const token = await signJWTToken(userData, JWT_SECRET, "7d");
             return successResponse(res, 201, 'Registration Successful.', { user, token });
-
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }

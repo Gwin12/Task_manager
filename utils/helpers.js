@@ -1,4 +1,4 @@
-const bcrypt = require("bcryptjs"); 
+const bcrypt = require("bcryptjs");
 
 const hashValue = async (value) => {
     try {
@@ -13,13 +13,13 @@ const hashValue = async (value) => {
 const verifyHash = async (value, hash) => {
     try {
         if (bcrypt.compareSync(value, hash)) {
-            return(true)
+            return (true)
         } else {
-            return(false)
+            return (false)
         }
     } catch (error) {
         return (false)
     }
 }
 
-module.exports = { isExpired, hashValue, verifyHash }
+module.exports = { hashValue, verifyHash }

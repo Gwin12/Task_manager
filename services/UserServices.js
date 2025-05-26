@@ -12,7 +12,12 @@ class UserServices {
     static async findUserData(data, showPassword) {
         try {
             let user = await User.findOne({ where: data });
-            if (user) { if (!showPassword) { delete user.password } }
+            if (user) {
+                if (!showPassword) { 
+                    delete user?.dataValues?.password 
+                    delete user?._previousDataValues?.password 
+                }
+            }
             return user;
         } catch (error) {
             throw error;

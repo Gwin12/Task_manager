@@ -1,4 +1,5 @@
 const TaskServices = require('../services/TaskServices');
+const UserServices = require('../services/UserServices');
 const { successResponse, errorResponse } = require('../utils/responses');
 const { addTaskSchema, updateTaskSchema } = require('../validators/task');
 
@@ -12,7 +13,6 @@ class TaskController {
             const task = await TaskServices.createTask(value);
             return successResponse(res, 201, "Task created successfully.", task);
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -24,11 +24,10 @@ class TaskController {
             if (status) where.status = status;
             const tasks = await TaskServices.findTasks({ where, page, limit });
             return successResponse(res, 200, "Tasks retrieved successfully.", {
-                tasks: tasks.row, total: tasks.count,
+                tasks: tasks.rows, total: tasks.count,
                 page: parseInt(page)
             });
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -45,7 +44,6 @@ class TaskController {
             await TaskServices.updateTask(task, value);
             return successResponse(res, 200, "Task updated successfully.", task);
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -58,7 +56,6 @@ class TaskController {
             await TaskServices.deleteTask(task);
             return successResponse(res, 200, "Task deleted successfully.");
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
@@ -68,17 +65,18 @@ class TaskController {
             const tasks = await TaskServices.findAllUserTasks(req.userId);
             if (!tasks) return errorResponse(res, 404, "Tasks not found");
             const totalMinutes = tasks.reduce((acc, task) => acc + (task.timeSpent || 0), 0);
-            return successResponse(res, 200, "Tasks retrieved successfully.", totalMinutes);
+            return successResponse(res, 200, "Tasks retrieved successfully.", { totalMinutes });
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
 
     static async taskReport(req, res, next) {
         try {
+            const user = await UserServices.findUserData({ id: req.params.id });
+            if (!user) return errorResponse(res, 404, "User with that id not found");
             const tasks = await TaskServices.findAllUserTasks(req.params.id);
-            if (!tasks) return errorResponse(res, 404, "Tasks not found");
+            if (!tasks.length) return errorResponse(res, 404, "User does not have any tasks.");
             const total = tasks.length;
             const completed = tasks.filter(task => task.status === 'completed').length;
             const pending = tasks.filter(task => task.status === 'pending').length;
@@ -88,7 +86,6 @@ class TaskController {
                 completionRate: total ? `${((completed / total) * 100).toFixed(2)}%` : '0%',
             })
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
