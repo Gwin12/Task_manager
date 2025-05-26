@@ -12,16 +12,15 @@
 
 
 # .env
-JWT_SECRET=OurSeCreT_Secret40902
-PORT=5000
-
-DB_HOST=localhost
-DB_USER=your_db_user
-DB_PASSWORD=your_db_password
-DB_NAME=task_manager
-DB_PORT=5432
+- JWT_SECRET=OurSeCreT_Secret40902
+- PORT=5000
+- DB_HOST=localhost
+- DB_USER=your_db_user
+- DB_PASSWORD=your_db_password
+- DB_NAME=task_manager
+- DB_PORT=5432
 
 # Documentation link 
-https://documenter.getpostman.com/view/26295282/2sB2qcDgsK
+- https://documenter.getpostman.com/view/26295282/2sB2qcDgsK
 
 
