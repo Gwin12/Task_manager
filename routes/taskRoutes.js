@@ -17,15 +17,15 @@ taskRoute.route("/")
     .get(getTasks)
     .post(createTask)
 
-taskRoute.route("/:id")
-    .put(updateTask)
-    .delete(deleteTask)
-
 taskRoute.route("/report-time")
     .get(reportTime)
 
-taskRoute.route("/report:id")
+taskRoute.route("/report/:id")
     .get(mustBeAdmin, taskReport)
+
+taskRoute.route("/:id")
+    .put(updateTask)
+    .delete(deleteTask)
 
 
 module.exports = taskRoute;
