@@ -24,7 +24,6 @@ class AuthController {
             req.userDetails = user
             next()
         } catch (error) {
-            console.log(error)
             return errorResponse(res, 401, "You must be logged in to perform that action!", "", error)
         }
     }
@@ -38,7 +37,6 @@ class AuthController {
             req.adminId = apiUser._id
             next()
         } catch (error) {
-            console.log(error)
             next(error)
         }
     }
